@@ -1,0 +1,179 @@
+﻿<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSSoGRAM</title>
+  <link rel='stylesheet' href="styles.css">
+    <script data-require="jquery@2.1.3" data-semver="2.1.3" src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
+ 
+  </head>
+
+  <body>
+    <header>
+	<h1>PSYCHoGRAM</h1>
+    <p>Лучше чем Instagram!</p>
+	</header>
+	<main>
+    <div id="image">
+		<span class="upload-info">Загрузите ваше фото или перетащите его сюда</span>
+      <img id='output'>
+    </div>
+    <input type="file" name="photo" accept="image/*, image/jpeg" hidden>
+	<p>Выберите фильтры:</p>
+	<div class="filters-wrapper">
+	<div class="filters-container">
+	<div id = 'filter0' class="filter original" data-filter="original" data-value="none"><span>Reset</span><img src=""></div>
+    <div id = 'filter1' class="filter grayscale" data-filter="grayscale" data-value="10%"><span>Grayscale</span><img src=""></div>
+    <div id = 'filter2' class="filter blur" data-filter="blur" data-value="1px"><span>Blur</span><img src=""></div>
+    <div id = 'filter3' class="filter contrast" data-filter="contrast" data-value="110%"><span>Contrast</span><img src=""></div>
+    <div id = 'filter4' class="filter brightness" data-filter="brightness" data-value="110%"><span>Brightness</span><img src=""></div>
+    <div id = 'filter5' class="filter sepia" data-filter="sepia" data-value="10%"><span>Sepia</span><img src=""></div>
+    <div id = 'filter6' class="filter saturate" data-filter="saturate" data-value="110%"><span>Saturate</span><img src=""></div> 
+    <div id = 'filter7' class="filter opacity" data-filter="opacity" data-value="90%"><span>Opacity</span><img src=""></div>
+    <div id = 'filter8' class="filter invert" data-filter="invert" data-value="100%"><span>Invert</span><img src=""></div>
+    <div id = 'filter9' class="filter hue-rotate" data-filter="hue-rotate" data-value="10deg"><span>Hue</span><img src=""></div>
+	</div>
+	</div>
+	<p>Многократное нажатие на фильтр усилит его эффект!</p>
+	
+	<div class="upload-btn"]>загрузить фото</div>
+	</main>
+    <script>
+	
+ $('.filter').click(function(e){
+	var filter = $(e.target).closest('div').data('filter'),
+		value = $(e.target).closest('div').data('value');
+	if(filter == 'original') {
+		$('#output').css({webkitFilter:'', mozFilter:'', filter:''});
+	}
+		else $('#output').css('webkitFilter',function(){
+			if($('#output').css('webkitFilter') == 'none'){
+			$('#output').css('webkitFilter', '' + filter + '(' + value + ')') 
+			} else $('#output').css('webkitFilter', $('#output').css('webkitFilter') + ' ' + filter + '(' + value + ')' )
+		}).css('mozFilter',function(){
+			if($('#output').css('mozFilter') == 'none'){
+			$('#output').css('mozFilter', '' + filter + '(' + value + ')') 
+			} else $('#output').css('mozFilter', $('#output').css('mozFilter') + ' ' + filter + '(' + value + ')' )
+		}).css('filter',function(){
+			if($('#output').css('filter') == 'none'){
+			$('#output').css('filter', '' + filter + '(' + value + ')') 
+			} else $('#output').css('filter', $('#output').css('filter') + ' ' + filter + '(' + value + ')' )
+		});
+});
+
+$('.upload-info, .upload-btn').click(function(){
+	$('input[type=file]').click();
+});
+
+var filtersWrapper = $('.filters-wrapper');
+
+document.querySelector('.filters-container').addEventListener ('wheel', function(e){
+	e.preventDefault();
+	filtersWrapper.scrollLeft(filtersWrapper.scrollLeft() + e.deltaY);
+});
+
+var	input = document.querySelector("input");
+
+var dropTarget = document.getElementById("image");
+
+dropTarget.addEventListener("dragover", function(e) {
+    e.preventDefault();
+	$('.upload-info').text('Отпустите файл здесь!');
+});
+dropTarget.addEventListener("dragleave", function(e) {
+    e.preventDefault();
+	$('.upload-info').text('Загрузите ваше фото или перетащите его сюда');
+});
+dropTarget.addEventListener("drop", function(e) {
+    e.preventDefault();
+    var file = e.dataTransfer.files[0];
+	
+	var URL = window.URL || window.webkitURL,
+  imageUrl,
+  image;
+ 
+if (URL) {
+  imageUrl = URL.createObjectURL(file);
+  image = document.getElementById('output');
+  image.onload = function() {
+	$('.upload-info').hide();
+	$('.filter img').attr('src', imageUrl).show();
+    URL.revokeObjectURL(imageUrl);
+	$('#output').css('webkitFilter', 'none');
+  };
+  
+  image.src = imageUrl;
+	
+}
+	
+/*	var	reader = new FileReader();
+	reader.readAsDataURL(file);
+	
+	reader.onload = function() {
+		var dataURL = reader.result;
+		var output = document.getElementById('output');
+		output.src = dataURL;
+	
+$('.upload-info').hide();
+
+$('#output').css('webkitFilter', 'none');
+
+$('.filter img').attr('src', dataURL).show();
+
+};*/
+});
+
+input.addEventListener("change", function()	{
+if	(input.files.length	> 0){
+var	file = input.files[0];
+
+var URL = window.URL || window.webkitURL,
+  imageUrl,
+  image;
+ 
+if (URL) {
+  imageUrl = URL.createObjectURL(file);
+  image = document.getElementById('output');
+  image.onload = function() {
+	$('.upload-info').hide();
+	$('.filter img').attr('src', imageUrl).show();
+    URL.revokeObjectURL(imageUrl);
+	$('#output').css('webkitFilter', 'none');
+  };
+  
+  image.src = imageUrl;
+	
+}
+
+/*var	reader = new FileReader();
+	reader.readAsDataURL(file);
+	reader.onload = function() {
+ 
+    var dataURL = reader.result;
+    var output = document.getElementById('output');
+    output.src = dataURL;
+	
+$('.upload-info').hide();
+
+$('#output').css('webkitFilter', 'none');
+
+$('.filter img').attr('src', dataURL).show();
+
+};
+
+reader.onloadstart = function(){
+	$('.upload-info').html('<img src="715.gif">');
+};
+
+reader.onprogress = function(){
+	$('.upload-info').html('<img src="715.gif">');
+};
+*/
+}
+});
+    </script>
+  </body>
+
+</html>
